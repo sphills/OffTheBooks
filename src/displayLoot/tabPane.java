@@ -100,5 +100,7 @@ public class tabPane {
    	 
    	 tabPane testTabPane = new tabPane(testGearList);
    	 
+   	 System.out.println("Test");
+   	 
 	}
 }
