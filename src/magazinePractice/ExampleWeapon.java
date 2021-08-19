@@ -14,7 +14,6 @@ public class ExampleWeapon {
 		}
 		
 		System.out.println("Click.");
-		
 	}
 	
 	public void loadWeapon(ExampleMagazine inputMagazine) {
