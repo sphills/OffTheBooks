@@ -94,4 +94,21 @@ public class CharacterAnalyzer {
 			System.out.println("You don't have any pieces of gear with a technology proficiency value on. May we suggest wearing at least one with technology proficiency on it?");
 		}
 	}
+	
+	public int returnStatValue(CharacterAttributeEnums requestedAttributeEnum) {
+		int attributeValue = 0;
+
+		BaseGearPiece gearPieceInventory[] = new BaseGearPiece[6];
+
+		gearPieceInventory = revisedPlayerCharacterToAnalyze.getEquippedGearPieces();	
+	
+		for (int i = 0; i < gearPieceInventory.length; i++) {
+			if (gearPieceInventory[i].getGearAttributeEnum() == requestedAttributeEnum) {
+				attributeValue += gearPieceInventory[i].getCharacterAttributeValue();
+			}
+		}
+
+		System.out.println(attributeValue);
+		return attributeValue;
+	}
 }

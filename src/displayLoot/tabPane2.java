@@ -3,6 +3,7 @@ package displayLoot;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -13,7 +14,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import lootGenerator.*;
+import lootGenerator.BaseGearPiece;
+import lootGenerator.GearPieceEnums;
+import lootGenerator.LootComposer;
+import lootGenerator.RevisedPlayerCharacter;
 
 public class tabPane2 {
 
@@ -85,6 +89,16 @@ public class tabPane2 {
 	          JTabbedPane pane = (JTabbedPane) evt.getSource();
 
 	          gearPieceSlot = pane.getSelectedIndex();
+	          
+	          if (gearPieceSlot == 6) {
+	        	  if (equipButton.isVisible()) {
+	        		  equipButton.setVisible(false); 
+	        	  }
+	          } else {
+	        	  if (!equipButton.isVisible()) {
+	        		  equipButton.setVisible(true); 
+	        	  }
+	          }
 	          
 	          updateSelectedGearList(gearPieceSlot);
 	          
@@ -182,9 +196,19 @@ public class tabPane2 {
 		BaseGearPiece equippedGearPieces[] = currentPlayer.getEquippedGearPieces();
 		
 		playerListModel.clear();
-		
+
+		HashMap<Integer, String> slotLabelMap = new HashMap<Integer, String>();
+		slotLabelMap.put(0, "mask");
+		slotLabelMap.put(1, "chest");
+		slotLabelMap.put(2, "backpack");
+		slotLabelMap.put(3, "gloves");
+		slotLabelMap.put(4, "holster");
+		slotLabelMap.put(5, "kneepads");
+
 		for (int i = 0; i < equippedGearPieces.length; i++) {
 			if (equippedGearPieces[i] == null) {
+				
+				/*
 				String slotLabel = "";
 				
 				switch (i) {
@@ -207,11 +231,11 @@ public class tabPane2 {
 					slotLabel = "kneepads";
 					break;
 				}
-				
-				playerListModel.addElement("The player's " + slotLabel + " inventory slot is empty");
+				 */
+								
+				playerListModel.addElement("The player's " + slotLabelMap.get(i) + " inventory slot is empty");
 				
 			} else {
-				
 				playerListModel.addElement(equippedGearPieces[i].getCharacterAttributeValue() + " " + equippedGearPieces[i].getGearAttributeEnum().toString() + " " + equippedGearPieces[i].getGearPieceEnum().toString());
 			}
 		}
@@ -227,6 +251,10 @@ public class tabPane2 {
 		}
    	 
 		tabPane2 testTabPane = new tabPane2(testGearList, testCharacter);
+
+		for (int i = 0; i < 100; i++) {
+			testGearList.add(lootDistributor.generateGearItem());
+		}
 
 	}
 }

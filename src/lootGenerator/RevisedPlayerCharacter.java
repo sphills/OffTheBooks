@@ -137,4 +137,8 @@ public class RevisedPlayerCharacter {
 	public String isCurrentlyEquipped() {
 		return " is currently equipped.";
 	}
+	
+	public CharacterAnalyzer getAnalyzer() {
+		return characterAnalyzer;
+	}
 }
