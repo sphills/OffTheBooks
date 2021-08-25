@@ -29,6 +29,7 @@ public class tabPane2 {
 	
 	private int gearPieceSlot = 0;
 	
+	//Setting up these instances and objects for the constructor to arrange
 	JPanel maskList = new JPanel();
 	DefaultListModel<String> maskListModel = new DefaultListModel<>();
 	JList<String> maskPanelList = new JList<String>(maskListModel);
@@ -50,14 +51,19 @@ public class tabPane2 {
 	JPanel playerList = new JPanel();
 	DefaultListModel<String> playerListModel = new DefaultListModel<>();
 	JList<String> playerPanelList = new JList<String>(playerListModel);
-		
+	
+	
+	// The constructor initializes the mainFrame variable
 	public tabPane2(ArrayList<BaseGearPiece> inputGearList, RevisedPlayerCharacter inputPlayerCharacter) {
+		//Initialize the mainFrame with a new JFrame and set the currentPlayer variable for later reference 
 		mainFrame = new JFrame();
 		currentPlayer = inputPlayerCharacter;
 		
+		//Create the equipButton JButton to be added to the mainFrame and set the location/size
 		JButton equipButton = new JButton("Equip");
         equipButton.setBounds(125, 305, 100, 50);
         
+        //Add all the previously-initialized JLists<String> to their target JPanels
 		maskList.add(maskPanelList);
 		chestList.add(chestPanelList);
 		backpackList.add(backpackPanelList);
@@ -66,7 +72,10 @@ public class tabPane2 {
 		kneepadsList.add(kneepadsPanelList);
 		playerList.add(playerPanelList);
 		
+		//Create the actual JTabbedPane that the JPanels will be displayed on
 		JTabbedPane tabbedPane = new JTabbedPane();
+
+		//Set the size of the JTabbedPane
 		tabbedPane.setBounds(50, 50, 300, 250);
 		tabbedPane.add("Mask", maskList);
 		tabbedPane.add("Chest", chestList);
@@ -76,20 +85,25 @@ public class tabPane2 {
 		tabbedPane.add("Kneepads", kneepadsList);
 		tabbedPane.add("Player Inventory", playerList);
 		
+		//Add the two components necessary to the main JFrame
+		mainFrame.add(tabbedPane);
 		mainFrame.add(equipButton);
 		
-		mainFrame.add(tabbedPane);
+		//Set the size of the mainFrame, layout, and visibility
 		mainFrame.setSize(400, 400);
 		mainFrame.setLayout(null);
 		mainFrame.setVisible(true);
 		
-		
+		//Add an event listener for whenever a new tab is clicked on
 	    tabbedPane.addChangeListener(new ChangeListener() {
 	        public void stateChanged(ChangeEvent evt) {
 	          JTabbedPane pane = (JTabbedPane) evt.getSource();
 
 	          gearPieceSlot = pane.getSelectedIndex();
 	          
+	          /* this if(){} hides the equipButton if the selected tab is the playerList, 
+	           * with validation so .setVisible isn't called unecessarily.
+	           */
 	          if (gearPieceSlot == 6) {
 	        	  if (equipButton.isVisible()) {
 	        		  equipButton.setVisible(false); 
@@ -99,10 +113,10 @@ public class tabPane2 {
 	        		  equipButton.setVisible(true); 
 	        	  }
 	          }
-	          
+
+	          //A private method call with the int gearPieceSlot passed as an argument
 	          updateSelectedGearList(gearPieceSlot);
 	          
-	          System.out.println("Gear Piece slot selected: " + gearPieceSlot);
 	        }
 	    });
 	    
@@ -114,82 +128,105 @@ public class tabPane2 {
           		currentPlayer.tellStats();
           		updatePlayerGearList();
           	}
-          });
+         });
         
 		updateFullGearList(inputGearList);
 		updateSelectedGearList(0);
 		updatePlayerGearList();
 	}
-	
+		
 	private void equipGearToPlayer(BaseGearPiece gearPieceToEquip) {
 		currentPlayer.equipGearItem(gearPieceToEquip);
 	}
- 
+
+	//
 	public void updateFullGearList(ArrayList<BaseGearPiece> inputGearList) {
 		gearList.clear();
-		
+
+		// This proxyListModel will be used to reference one of the previously established ListModels, without having to call .addElement
+		// on that ListModel directly
+		DefaultListModel<String> proxyListModel = new DefaultListModel<>();
+
 		for (BaseGearPiece currentGearPiece : inputGearList) {
 			gearList.add(currentGearPiece);
 		}
-		
-		for (BaseGearPiece copyGearPiece : gearList) {
-			
-			switch (copyGearPiece.getGearPieceEnum()) {
-			case MASK:
-				maskListModel.addElement((copyGearPiece.getCharacterAttributeValue() + " " + copyGearPiece.getGearAttributeEnum().toString() + " " + copyGearPiece.getGearPieceEnum().toString()));
-				break;
-			case CHEST:
-				chestListModel.addElement((copyGearPiece.getCharacterAttributeValue() + " " + copyGearPiece.getGearAttributeEnum().toString() + " " + copyGearPiece.getGearPieceEnum().toString()));
-				break;
-			case BACKPACK:
-				backpackListModel.addElement((copyGearPiece.getCharacterAttributeValue() + " " + copyGearPiece.getGearAttributeEnum().toString() + " " + copyGearPiece.getGearPieceEnum().toString()));
-				break;
-			case GLOVES:
-				glovesListModel.addElement((copyGearPiece.getCharacterAttributeValue() + " " + copyGearPiece.getGearAttributeEnum().toString() + " " + copyGearPiece.getGearPieceEnum().toString()));
-				break;
-			case HOLSTER:
-				holsterListModel.addElement((copyGearPiece.getCharacterAttributeValue() + " " + copyGearPiece.getGearAttributeEnum().toString() + " " + copyGearPiece.getGearPieceEnum().toString()));
-				break;
-			case KNEEPADS:
-				kneepadsListModel.addElement((copyGearPiece.getCharacterAttributeValue() + " " + copyGearPiece.getGearAttributeEnum().toString() + " " + copyGearPiece.getGearPieceEnum().toString()));
-				break;
-			}
-		}
 	}
 	
+	/* This private method makes a new ArrayList<GearPiece> copy from gearList, selecting only gearPieces that have
+	 * the requested enum and adding them to selectedGearList, which is how the user selects the gearPiece they want
+	 * their player character to equip.
+	 */
 	private void updateSelectedGearList(int selectedGearPieceSlot) {
-        GearPieceEnums desiredEnum = GearPieceEnums.MASK;
+       /* Initialized desiredEnum variable for use with the for() to populate selectedGearList with gearPieces that
+		* have the required GearPieceEnum
+		*/
+		GearPieceEnums desiredEnum = GearPieceEnums.MASK;
+        DefaultListModel<String> proxyListModel = new DefaultListModel<>();
         
-        gearPieceSlot = selectedGearPieceSlot;
-        
+		//Empty the ArrayList<GearPiece> instance variable selectedGearList so no old gear is carried over/duplicated
         selectedGearList.clear();
         
-        switch (gearPieceSlot) {
+        /* Switch to set desiredEnum to the target enum. Only gearPieces that have the required enum will be added to the
+         * newly-emptied selectedGearList 
+         */
+        switch (selectedGearPieceSlot) {
         case 0:
-      	  desiredEnum = GearPieceEnums.MASK;
-      	  break;
+        	proxyListModel = maskListModel;
+        	desiredEnum = GearPieceEnums.MASK;
+        	break;
         case 1:
+        	proxyListModel = chestListModel;
       	  desiredEnum = GearPieceEnums.CHEST;
       	  break;
         case 2:
+        	proxyListModel = backpackListModel;
       	  desiredEnum = GearPieceEnums.BACKPACK;
       	  break;
         case 3:
+        	proxyListModel = glovesListModel;
       	  desiredEnum = GearPieceEnums.GLOVES;
       	  break;
         case 4:
+        	proxyListModel = holsterListModel;
       	  desiredEnum = GearPieceEnums.HOLSTER;
       	  break;
         case 5:
+        	proxyListModel = kneepadsListModel;
       	  desiredEnum = GearPieceEnums.KNEEPADS;
       	  break;
         }
         
+        proxyListModel.clear();
+        
+        /* This for iterates through the master ArrayList<GearPiece> gearList, discriminates based on the piece having the required enum,
+         * and if it does have the correct enum, adds it to the selectedGearList
+         */
+        
+        long startTime = System.nanoTime();
+        /*
         for (BaseGearPiece selectedGearPieceCopy : gearList) {
   		  if (selectedGearPieceCopy.getGearPieceEnum() == desiredEnum) {
   			  selectedGearList.add(selectedGearPieceCopy);
   		  }
-  	  }
+  	  	}
+        
+        for (BaseGearPiece copyGearPiece : selectedGearList ) {
+        	proxyListModel.addElement((copyGearPiece.getCharacterAttributeValue() + " " + copyGearPiece.getGearAttributeEnum().toString() + " " + copyGearPiece.getGearPieceEnum().toString()));
+        }
+        */
+        
+        for (BaseGearPiece selectedGearPieceCopy : gearList) {
+    		  if (selectedGearPieceCopy.getGearPieceEnum() == desiredEnum) {
+    			  selectedGearList.add(selectedGearPieceCopy);
+    			  proxyListModel.addElement((selectedGearPieceCopy.getCharacterAttributeValue() + " " + selectedGearPieceCopy.getGearAttributeEnum().toString() + " " + selectedGearPieceCopy.getGearPieceEnum().toString()));
+    		  }
+    	  	}
+
+        long stopTime = System.nanoTime();
+        
+        System.out.println("Proxy list model size: " + proxyListModel.size());
+        System.out.println("Time to build list: " + (stopTime - startTime) + " nanoseconds or " + ((stopTime - startTime) / 1000000000f) + " seconds.");
+        System.out.println("Time to build list per item: " + (((stopTime - startTime) / proxyListModel.size()) / 100000f) + " milliseconds.");
 	}
 	
 	private void updatePlayerGearList() {
@@ -198,20 +235,11 @@ public class tabPane2 {
 		playerListModel.clear();
 
 		HashMap<Integer, String> slotLabelMap = new HashMap<Integer, String>();
-		slotLabelMap.put(0, "mask");
-		slotLabelMap.put(1, "chest");
-		slotLabelMap.put(2, "backpack");
-		slotLabelMap.put(3, "gloves");
-		slotLabelMap.put(4, "holster");
-		slotLabelMap.put(5, "kneepads");
-
-		for (int i = 0; i < equippedGearPieces.length; i++) {
-			if (equippedGearPieces[i] == null) {
-				
-				/*
-				String slotLabel = "";
-				
-				switch (i) {
+		String slotLabel = "";
+		
+		for (int i = 0; i < 6; i++) {
+			
+			switch (i) {
 				case 0:
 					slotLabel = "mask";
 					break;
@@ -230,31 +258,19 @@ public class tabPane2 {
 				case 5:
 					slotLabel = "kneepads";
 					break;
-				}
-				 */
-								
+					
+			}
+			slotLabelMap.put(i, slotLabel);
+		}
+
+		for (int i = 0; i < equippedGearPieces.length; i++) {
+			if (equippedGearPieces[i] == null) {
+		
 				playerListModel.addElement("The player's " + slotLabelMap.get(i) + " inventory slot is empty");
 				
 			} else {
 				playerListModel.addElement(equippedGearPieces[i].getCharacterAttributeValue() + " " + equippedGearPieces[i].getGearAttributeEnum().toString() + " " + equippedGearPieces[i].getGearPieceEnum().toString());
 			}
 		}
-	}
-	
-	public static void main(String[] args) {
-		LootComposer lootDistributor = new LootComposer();
-		ArrayList<BaseGearPiece> testGearList = new ArrayList<BaseGearPiece>();
-		RevisedPlayerCharacter testCharacter = new RevisedPlayerCharacter();
-   	 
-		for (int i = 0; i < 100; i++) {
-			testGearList.add(lootDistributor.generateGearItem());
-		}
-   	 
-		tabPane2 testTabPane = new tabPane2(testGearList, testCharacter);
-
-		for (int i = 0; i < 100; i++) {
-			testGearList.add(lootDistributor.generateGearItem());
-		}
-
 	}
 }
