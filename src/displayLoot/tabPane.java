@@ -86,7 +86,7 @@ public class tabPane {
 			}
 		}
 	}
-	
+	/*
 	public static void main(String[] args) {
    	 LootComposer lootDistributor = new LootComposer();
    	 ArrayList<BaseGearPiece> testGearList = new ArrayList<BaseGearPiece>();
@@ -103,4 +103,5 @@ public class tabPane {
    	 System.out.println("Test");
    	 
 	}
+	*/
 }

@@ -2,6 +2,7 @@ package javaBook;
 
 public class BeerSong {
 
+	/*
 	public static void main(String[] args) {
 		int beerNum = 99;
 		String beerPlurality = "bottles";
@@ -24,4 +25,5 @@ public class BeerSong {
 			}
 		}
 	}
+	*/
 }

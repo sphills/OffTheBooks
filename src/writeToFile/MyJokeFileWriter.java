@@ -6,10 +6,6 @@ import java.io.IOException;
 
 public class MyJokeFileWriter {
 
-	public static void main(String[] args) {
-		writeToFile(createFile());
-	}
-	
 	public static File createFile() {
 		try {
 			File myFile = new File("CS111_EvenOdd.txt");

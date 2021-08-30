@@ -52,7 +52,6 @@ public class tabPane2 {
 	DefaultListModel<String> playerListModel = new DefaultListModel<>();
 	JList<String> playerPanelList = new JList<String>(playerListModel);
 	
-	
 	// The constructor initializes the mainFrame variable
 	public tabPane2(ArrayList<BaseGearPiece> inputGearList, RevisedPlayerCharacter inputPlayerCharacter) {
 		//Initialize the mainFrame with a new JFrame and set the currentPlayer variable for later reference 

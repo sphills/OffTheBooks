@@ -6,10 +6,6 @@ import java.io.IOException;
 
 public class MyFileWriter {
 
-	public static void main(String[] args) {
-		writeToFile(createFile());
-	}
-	
 	public static File createFile() {
 		try {
 			File myFile = new File("testFile03.txt");
