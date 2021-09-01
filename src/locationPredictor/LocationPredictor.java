@@ -29,7 +29,6 @@ public class LocationPredictor {
 	
 	private double[] calculateHitLocation(double[] inputLocation, float inputRightSpeed, float inputForwardSpeed, float inputUpSpeed, float inputTimeInterval) {
 		double[] locationReference = inputLocation;
-		double[] calculatedLocation = new double[] {0, 0, 0};
 		float referenceSpeed = 0.0f;
 		
 		for (int i = 0; i < locationReference.length; i++) {
@@ -45,9 +44,9 @@ public class LocationPredictor {
 				break;
 			}
 			
-			calculatedLocation[i] = ((locationReference[i] + referenceSpeed) * inputTimeInterval);
+			locationReference[i] = ((locationReference[i] + referenceSpeed) * inputTimeInterval);
 		}
 		
-		return calculatedLocation;
+		return locationReference;
 	}
 }
